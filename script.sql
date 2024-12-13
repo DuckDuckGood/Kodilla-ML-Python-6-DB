@@ -1,0 +1,2 @@
+create table projects (id integer primary key, name text, start_date text, end_date text);
+create table tasks (id integer primary key, project_id int, name text, description text, status text, start_date text, end_date text);
