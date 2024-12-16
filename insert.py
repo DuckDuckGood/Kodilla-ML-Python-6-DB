@@ -1,9 +1,7 @@
-import sqlite3
-from sqlite3 import Error
 from colors import Colors
-from queries_processing import insert_to_projects, insert_to_tasks, execute_script_sql
+from queries_processing import insert_to_projects, insert_to_tasks, execute_script_sql, create_connection
 
-def what_to_do(conn):
+def insert_data(conn):
     options = (
         "insert to 'projects'",
         "insert to 'tasks'",
@@ -27,20 +25,6 @@ def what_to_do(conn):
             return
     print(f'{Colors.FAIL}There is not option like "{choosen_option}"{Colors.ENDC}')
 
-def create_connection(db_name = ':memory:'):
-    conn = None
-    try:
-        conn = sqlite3.connect(db_name)
-        print(f'{Colors.OKGREEN}Successfully connected to {db_name} with Sqlite3 {sqlite3.sqlite_version}{Colors.ENDC}\n')
-
-        what_to_do(conn)
-
-    except Error as e:
-        print(e)
-    finally:
-        if conn:
-            conn.close()
-
 if __name__ == '__main__':
-    create_connection(r'database.db')
+    create_connection(insert_data, r'database.db')
     # create_connection()

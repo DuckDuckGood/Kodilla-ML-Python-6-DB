@@ -1,5 +1,20 @@
+import sqlite3
+from sqlite3 import Error
 from colors import Colors
 
+def create_connection(what_to_do, db_name = ':memory:', **kwargs):
+    conn = None
+    try:
+        conn = sqlite3.connect(db_name)
+        print(f'{Colors.OKGREEN}Successfully connected to {db_name} with Sqlite3 {sqlite3.sqlite_version}{Colors.ENDC}\n')
+        result = what_to_do(conn, **kwargs)
+        conn.close()
+        return result
+    except Error as e:
+        print(e)
+    finally:
+        if conn:
+            conn.close()
 
 def insert_to_projects(conn):
     name = input('Name: ')
@@ -36,3 +51,11 @@ def execute_query(conn, enumerated_query):
     print(f'{query_index}. {Colors.HEADER}{query}{Colors.ENDC}\n')
     cursor = conn.cursor()
     cursor.execute(query)
+
+def update_project_name(conn, project):
+    conn.cursor().execute('update projects set name=? where id=?', (project.name, project.id))
+    conn.commit()
+
+def update_task_name(conn, task):
+    conn.cursor().execute('update tasks set name=? where id=?', (task.name, task.id))
+    conn.commit()
